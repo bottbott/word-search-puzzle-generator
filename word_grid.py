@@ -79,6 +79,7 @@ class WordGrid:
 	# sets a word in a position and with a particular direction
 	def place_word(self, word, x, y, direction):
 		# for every letter on the word
+		# words will be randomly be in reverse order
 		rando = random.randint(0,1)
 		for l in range(len(word)):
 			if direction == HORIZONTAL:
