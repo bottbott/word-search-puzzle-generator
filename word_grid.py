@@ -5,6 +5,7 @@ import os
 
 HORIZONTAL 	= 0
 VERTICAL	= 1
+DIAGONAL	= 2
 
 class WordGrid:
 	def __init__(self, width) -> None:
@@ -38,7 +39,7 @@ class WordGrid:
 				while not finded_place_to_enter_word and attempt <= 100:
 
 					# chooses a random direction
-					random_direction = random.choice([HORIZONTAL, VERTICAL])
+					random_direction = random.choice([HORIZONTAL, VERTICAL, DIAGONAL])
 
 					# random x and y positions of the first letter of the current word
 					random_x = random.randint(0, self.width-1)
@@ -50,6 +51,10 @@ class WordGrid:
 						random_x -= (random_x + len(word)) - self.width
 					if random_y + len(word) > self.width and random_direction == VERTICAL:
 						random_y -= (random_y + len(word)) - self.width
+					if random_y + len(word) > self.width and random_direction == DIAGONAL:
+						random_y -= (random_y + len(word)) - self.width
+					if random_x + len(word) > self.width and random_direction == DIAGONAL:
+						random_x -= (random_x + len(word)) - self.width
 					
 					
 					# checking if the word can be placed before placing it
@@ -96,6 +101,13 @@ class WordGrid:
 				else:
 					self.grid[x + (y+l) * self.width] = "\033[32m" + word[len(word) - l - 1] + "\033[0m" if self.cheated else word[l]
 				self.available_spots[x + (y+l) * self.width] = False # making the vertical spot unavaliable
+			elif direction == DIAGONAL:
+				# place diagonally
+				if rando == 0:
+					self.grid[x+l + (y+l) * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
+				else:
+					self.grid[x+l + (y+l) * self.width] = "\033[32m" + word[len(word) - l - 1] + "\033[0m" if self.cheated else word[l]
+				self.available_spots[x+l + (y+l) * self.width] = False # making the vertical spot unavaliable
 			
 	
 	# checks if a word can be placed in a position and with a particular direction
@@ -114,12 +126,23 @@ class WordGrid:
 					# marks the available spot true again (possibly being false before, because of a letter from another word occupying it)
 					# then the current letter on this loop will overlap the same letter from the other word
 					self.available_spots[x+l + y * self.width] = True
-			else:
+			elif direction == VERTICAL:
 				if self.grid[x + (y+l) * self.width] == letter:
 					self.available_spots[x + (y+l) * self.width] = True
+			elif direction == DIAGONAL:
+				print(f'{x}, {y}')
+				if self.grid[x+l + (y+l) * self.width] == letter:
+					self.available_spots[x+l + (y+l) * self.width] = True
+				
 
 			# at the end, check if the spot is available or not
-			spot_available = self.available_spots[x+l + y * self.width] if direction == HORIZONTAL else self.available_spots[x + (y+l) * self.width]
+			if direction == HORIZONTAL:
+				spot_available = self.available_spots[x+l + y * self.width]
+			elif direction == VERTICAL:
+				spot_available = self.available_spots[x + (y+l) * self.width]
+			elif direction == DIAGONAL:
+				spot_available = self.available_spots[x+l + (y+l) * self.width]
+			# spot_available = self.available_spots[x+l + y * self.width] if direction == HORIZONTAL else self.available_spots[x + (y+l) * self.width]
 
 			if spot_available:
 				continue
@@ -146,11 +169,12 @@ class WordGrid:
 	# prints the grid on the terminal
 	def print(self):
 
-		print("\033[96m┌" + ("─"*(2*(self.width)+1)) + "┐\033[0m" ) # just a nice little line
+		# print("\033[96m┌" + ("─"*(2*(self.width)+1)) + "┐\033[0m" ) # just a nice little line
 		for y in range(self.width):
-			print("\033[96m│\033[0m", end=" ")
+			# print("\033[96m│\033[0m", end=" ")
 			for x in range(self.width):
-				print(self.grid[x + y * self.width], end=" ")
-			print("\033[96m│\033[0m")
-		print("\033[96m└" + ("─"*(2*(self.width)+1)) + "┘\033[0m" )
+				print(self.grid[x + y * self.width], end="")
+			print("")
+			# print("\033[96m│\033[0m")
+		# print("\033[96m└" + ("─"*(2*(self.width)+1)) + "┘\033[0m" )
 
