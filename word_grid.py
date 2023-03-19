@@ -130,7 +130,6 @@ class WordGrid:
 				if self.grid[x + (y+l) * self.width] == letter:
 					self.available_spots[x + (y+l) * self.width] = True
 			elif direction == DIAGONAL:
-				print(f'{x}, {y}')
 				if self.grid[x+l + (y+l) * self.width] == letter:
 					self.available_spots[x+l + (y+l) * self.width] = True
 				
