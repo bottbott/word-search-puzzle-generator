@@ -22,7 +22,7 @@ def main(cheated=False, words_file=None, size=20):
 	file1.close()
 
 	# appending words to array
-	for _ in range(10):
+	for _ in range(164):
 		words.append(lines[random.randint(0, len(lines)-1)].strip())
 
 	# creating the word grid

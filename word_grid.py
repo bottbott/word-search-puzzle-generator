@@ -79,14 +79,21 @@ class WordGrid:
 	# sets a word in a position and with a particular direction
 	def place_word(self, word, x, y, direction):
 		# for every letter on the word
+		rando = random.randint(0,1)
 		for l in range(len(word)):
 			if direction == HORIZONTAL:
 				# place horizontally
-				self.grid[x+l + y * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
+				if rando == 0:
+					self.grid[x+l + y * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
+				else:
+					self.grid[x+l + y * self.width] = "\033[32m" + word[len(word) - l - 1] + "\033[0m" if self.cheated else word[l]
 				self.available_spots[x+l + y * self.width] = False # making the horizontal spot unavaliable
 			elif direction == VERTICAL:
 				# place vertically
-				self.grid[x + (y+l) * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
+				if rando == 0:
+					self.grid[x + (y+l) * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
+				else:
+					self.grid[x + (y+l) * self.width] = "\033[32m" + word[len(word) - l - 1] + "\033[0m" if self.cheated else word[l]
 				self.available_spots[x + (y+l) * self.width] = False # making the vertical spot unavaliable
 			
 	
