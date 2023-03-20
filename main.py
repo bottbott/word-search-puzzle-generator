@@ -23,7 +23,9 @@ def main(cheated=False, words_file=None, size=20):
 
 	# appending words to array
 	for _ in range(164):
-		words.append(lines[random.randint(0, len(lines)-1)].strip())
+		rando = random.randint(0, len(lines)-1)
+		words.append(lines[rando].strip())
+		lines.pop(rando)
 
 	# creating the word grid
 	grid = WordGrid(size)
